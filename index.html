@@ -3,36 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Push Test (Single File)</title>
+  <title>Custom Push Test</title>
 </head>
 <body>
-  <button id="notifyBtn">Send Test Notification</button>
+  <button id="notifyBtn">Send Notification</button>
 
   <script>
-    // Create a simple service worker from a Blob
-    const swCode = `
-      self.addEventListener('install', event => {
-        console.log('Service Worker installed');
-      });
-    `;
+    // ---- EDIT THESE VARIABLES ----
+    const NOTIF_TITLE = "Hello from GitHub Pages!";
+    const NOTIF_BODY = "This is your fake push notification.";
+    const NOTIF_ICON = "https://via.placeholder.com/128"; // icon URL
+    const NOTIF_URL  = "https://example.com"; // link to open when clicked
+    // --------------------------------
 
-    const swBlob = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(swBlob);
-
-    // Register service worker
+    // Register the service worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register(swUrl)
-        .then(() => console.log('Service Worker Registered'));
+      navigator.serviceWorker.register('sw.js').then(reg => {
+        console.log('Service Worker registered.');
+      });
     }
 
-    // Request permission and trigger a notification
+    // Button click triggers notification
     document.getElementById('notifyBtn').addEventListener('click', () => {
       Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
           navigator.serviceWorker.ready.then(reg => {
-            reg.showNotification("Hello from GitHub Pages!", {
-              body: "This is your fake push notification.",
-              icon: "https://via.placeholder.com/128"
+            reg.showNotification(NOTIF_TITLE, {
+              body: NOTIF_BODY,
+              icon: NOTIF_ICON,
+              data: { url: NOTIF_URL }
             });
           });
         }
