@@ -6,19 +6,21 @@
   <link rel="manifest" href="/notifications-site/manifest.json">
   <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
   <script>
-    OneSignal.push(function() {
-  OneSignal.init({
-    appId: "3ad849fc-6b63-4da6-a7ef-1ae18b77deb8",
-    serviceWorkerPath: "/notifications-site/OneSignalSDKWorker.js",
-    serviceWorkerParam: { scope: "/notifications-site/" }
-  });
-});
+    // Make sure OneSignal is defined, even before the SDK loads
+    window.OneSignal = window.OneSignal || [];
+    window.OneSignal.push(function() {
+      OneSignal.init({
+        appId: "3ad849fc-6b63-4da6-a7ef-1ae18b77deb8",
+        serviceWorkerPath: "/notifications-site/OneSignalSDKWorker.js",
+        serviceWorkerParam: { scope: "/notifications-site/" }
+      });
+    });
 
     function askForPermission() {
-      OneSignal.push(function() {
+      window.OneSignal.push(function() {
         OneSignal.isPushNotificationsEnabled(function(isEnabled) {
           if (!isEnabled) {
-            OneSignal.showNativePrompt();  // This triggers the browser permission prompt
+            OneSignal.showNativePrompt();  
           } else {
             alert("You have already enabled notifications.");
           }
