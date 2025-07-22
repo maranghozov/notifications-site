@@ -1,9 +1,7 @@
 {
   "name": "My Notification Site",
-  "short_name": "Notify",
-  "start_url": "/",
+  "short_name": "Notifications",
+  "start_url": "/notifications-site/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
   "gcm_sender_id": "482941778795"
 }
