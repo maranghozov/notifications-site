@@ -1,37 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>My Notification Site</title>
-  <link rel="manifest" href="/notifications-site/manifest.json">
-  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
-  <script>
-    // Make sure OneSignal is defined, even before the SDK loads
-    window.OneSignal = window.OneSignal || [];
-    window.OneSignal.push(function() {
-      OneSignal.init({
-        appId: "3ad849fc-6b63-4da6-a7ef-1ae18b77deb8",
-        serviceWorkerPath: "/notifications-site/OneSignalSDKWorker.js",
-        serviceWorkerParam: { scope: "/notifications-site/" }
-      });
-    });
-
-    function askForPermission() {
-      window.OneSignal.push(function() {
-        OneSignal.isPushNotificationsEnabled(function(isEnabled) {
-          if (!isEnabled) {
-            OneSignal.showNativePrompt();  
-          } else {
-            alert("You have already enabled notifications.");
-          }
-        });
-      });
-    }
-  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Push Test (Single File)</title>
 </head>
 <body>
-  <h1>Welcome!</h1>
-  <p>Click the button below to enable notifications:</p>
-  <button onclick="askForPermission()">Enable Notifications</button>
+  <button id="notifyBtn">Send Test Notification</button>
+
+  <script>
+    // Create a simple service worker from a Blob
+    const swCode = `
+      self.addEventListener('install', event => {
+        console.log('Service Worker installed');
+      });
+    `;
+
+    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(swBlob);
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register(swUrl)
+        .then(() => console.log('Service Worker Registered'));
+    }
+
+    // Request permission and trigger a notification
+    document.getElementById('notifyBtn').addEventListener('click', () => {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          navigator.serviceWorker.ready.then(reg => {
+            reg.showNotification("Hello from GitHub Pages!", {
+              body: "This is your fake push notification.",
+              icon: "https://via.placeholder.com/128"
+            });
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
