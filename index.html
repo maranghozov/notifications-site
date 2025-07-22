@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>My Notification Site</title>
+  <link rel="manifest" href="/manifest.json">
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <script>
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
+        appId: "YOUR-ONESIGNAL-APP-ID", // Replace this with your OneSignal app ID
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Welcome!</h1>
+  <p>Click "Allow" to receive custom notifications.</p>
+</body>
+</html>
