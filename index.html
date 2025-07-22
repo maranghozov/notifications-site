@@ -9,13 +9,26 @@
     window.OneSignal = window.OneSignal || [];
     OneSignal.push(function() {
       OneSignal.init({
-        appId: "3ad849fc-6b63-4da6-a7ef-1ae18b77deb8", // Replace with your OneSignal app ID
+        appId: "3ad849fc-6b63-4da6-a7ef-1ae18b77deb8",
       });
     });
+
+    function askForPermission() {
+      OneSignal.push(function() {
+        OneSignal.isPushNotificationsEnabled(function(isEnabled) {
+          if (!isEnabled) {
+            OneSignal.showNativePrompt();  // This triggers the browser permission prompt
+          } else {
+            alert("You have already enabled notifications.");
+          }
+        });
+      });
+    }
   </script>
 </head>
 <body>
   <h1>Welcome!</h1>
-  <p>Click "Allow" to receive custom notifications.</p>
+  <p>Click the button below to enable notifications:</p>
+  <button onclick="askForPermission()">Enable Notifications</button>
 </body>
 </html>
