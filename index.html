@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Custom Push Test</title>
+  <title>Custom Push Test with Permission Button</title>
   <style>
     body {
       font-family: sans-serif;
@@ -13,13 +13,17 @@
     }
     input, button {
       width: 100%;
-      margin: 5px 0;
-      padding: 8px;
+      margin: 8px 0;
+      padding: 10px;
       font-size: 16px;
+      box-sizing: border-box;
     }
   </style>
 </head>
 <body>
+  <h2>Notification Permission</h2>
+  <button id="requestPermBtn">Request Notification Permission</button>
+
   <h2>Create Your Notification</h2>
   <input type="text" id="title" placeholder="Notification Title" />
   <input type="text" id="body" placeholder="Notification Description" />
@@ -35,24 +39,31 @@
       });
     }
 
+    // Request Notification Permission button
+    document.getElementById('requestPermBtn').addEventListener('click', () => {
+      Notification.requestPermission().then(permission => {
+        alert(`Notification permission status: ${permission}`);
+      });
+    });
+
+    // Send Notification button
     document.getElementById('notifyBtn').addEventListener('click', () => {
       const title = document.getElementById('title').value || "Default Title";
       const body = document.getElementById('body').value || "Default Description";
       const icon = document.getElementById('icon').value || "https://via.placeholder.com/128";
       const link = document.getElementById('link').value || "https://example.com";
 
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          navigator.serviceWorker.ready.then(reg => {
-            reg.showNotification(title, {
-              body: body,
-              icon: icon,
-              data: { url: link }
-            });
-          });
-        } else {
-          alert("Notification permission denied!");
-        }
+      if (Notification.permission !== 'granted') {
+        alert('Please grant notification permission first!');
+        return;
+      }
+
+      navigator.serviceWorker.ready.then(reg => {
+        reg.showNotification(title, {
+          body: body,
+          icon: icon,
+          data: { url: link }
+        });
       });
     });
   </script>
