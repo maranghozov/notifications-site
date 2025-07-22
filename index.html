@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>My Notification Site</title>
-  <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="/notifications-site/manifest.json">
   <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
   <script>
-    window.OneSignal = window.OneSignal || [];
     OneSignal.push(function() {
-      OneSignal.init({
-        appId: "3ad849fc-6b63-4da6-a7ef-1ae18b77deb8",
-      });
-    });
+  OneSignal.init({
+    appId: "3ad849fc-6b63-4da6-a7ef-1ae18b77deb8",
+    serviceWorkerPath: "/notifications-site/OneSignalSDKWorker.js",
+    serviceWorkerParam: { scope: "/notifications-site/" }
+  });
+});
 
     function askForPermission() {
       OneSignal.push(function() {
