@@ -4,36 +4,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Custom Push Test</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+    input, button {
+      width: 100%;
+      margin: 5px 0;
+      padding: 8px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
+  <h2>Create Your Notification</h2>
+  <input type="text" id="title" placeholder="Notification Title" />
+  <input type="text" id="body" placeholder="Notification Description" />
+  <input type="text" id="icon" placeholder="Icon URL (optional)" />
+  <input type="text" id="link" placeholder="Link to Open" />
   <button id="notifyBtn">Send Notification</button>
 
   <script>
-    // ---- EDIT THESE VARIABLES ----
-    const NOTIF_TITLE = "Hello from GitHub Pages!";
-    const NOTIF_BODY = "This is your fake push notification.";
-    const NOTIF_ICON = "https://via.placeholder.com/128"; // icon URL
-    const NOTIF_URL  = "https://example.com"; // link to open when clicked
-    // --------------------------------
-
     // Register the service worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').then(reg => {
+      navigator.serviceWorker.register('sw.js').then(() => {
         console.log('Service Worker registered.');
       });
     }
 
-    // Button click triggers notification
     document.getElementById('notifyBtn').addEventListener('click', () => {
+      const title = document.getElementById('title').value || "Default Title";
+      const body = document.getElementById('body').value || "Default Description";
+      const icon = document.getElementById('icon').value || "https://via.placeholder.com/128";
+      const link = document.getElementById('link').value || "https://example.com";
+
       Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
           navigator.serviceWorker.ready.then(reg => {
-            reg.showNotification(NOTIF_TITLE, {
-              body: NOTIF_BODY,
-              icon: NOTIF_ICON,
-              data: { url: NOTIF_URL }
+            reg.showNotification(title, {
+              body: body,
+              icon: icon,
+              data: { url: link }
             });
           });
+        } else {
+          alert("Notification permission denied!");
         }
       });
     });
